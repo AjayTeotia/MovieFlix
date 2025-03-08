@@ -17,7 +17,7 @@ export default function search() {
         error,
         refetch: loadMovies,
         reset,
-    } = useFetch(() => fetchMovies({ query: searchQuery }));
+    } = useFetch(() => fetchMovies({ query: searchQuery }), false);
 
     const handleSearch = (text: string) => {
         setSearchQuery(text);
