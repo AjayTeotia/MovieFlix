@@ -9,22 +9,34 @@ export const TMDB_CONFIG = {
 
 export const fetchMovies = async ({
     query,
+    resultsPerPage = 50,  // Default to 50 results per query
 }: {
     query: string;
+    resultsPerPage?: number;  // Allow flexibility in how many results per query
 }): Promise<Movie[]> => {
-    const endpoint = query
-        ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-        : `${TMDB_CONFIG.BASE_URL}/discover/movie?sort_by=popularity.desc&include_adult=false`;
+    // Calculate the number of pages to fetch based on the requested results per page
+    const totalPages = Math.ceil(resultsPerPage / 20);  // Each page has 20 results by default
 
-    const response = await fetch(endpoint, {
-        method: "GET",
-        headers: TMDB_CONFIG.headers,
-    });
+    const allResults: Movie[] = [];
 
-    if (!response.ok) {
-        throw new Error(`Failed to fetch movies: ${response.statusText}`);
+    // Fetch results from each page
+    for (let page = 1; page <= totalPages; page++) {
+        const endpoint = query
+            ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`
+            : `${TMDB_CONFIG.BASE_URL}/discover/movie?sort_by=popularity.desc&include_adult=false&page=${page}`;
+
+        const response = await fetch(endpoint, {
+            method: "GET",
+            headers: TMDB_CONFIG.headers,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch movies: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        allResults.push(...data.results);  // Collect results from each page
     }
 
-    const data = await response.json();
-    return data.results;
+    return allResults;
 };
