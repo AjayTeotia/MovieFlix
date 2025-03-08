@@ -85,7 +85,7 @@ export default function _layout() {
                 }}
             />
 
-            <Tabs.Screen
+            {/* <Tabs.Screen
                 name='save'
                 options={{
                     title: 'save',
@@ -113,7 +113,7 @@ export default function _layout() {
                         />
                     )
                 }}
-            />
+            /> */}
         </Tabs>
     )
 }
