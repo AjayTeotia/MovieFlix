@@ -20,7 +20,7 @@ export default function Index() {
     <View className="flex-1 bg-primary">
       <Image
         source={images.bg}
-        className="w-full absolute z-0"
+        className="flex-1 w-full absolute z-0"
         resizeMode="cover"
       />
 
